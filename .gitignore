@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.npm-cache/
+.coverage/
+*.log
+.env
+.DS_Store
+.memory-runtime/
+.cli-memory/

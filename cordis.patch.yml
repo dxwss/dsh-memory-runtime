@@ -1,0 +1,4 @@
+# Add this row to a DSH profile with `dsh --patch ./cordis.patch.yml`.
+- insert:
+    - id: dsh-memory-runtime
+      name: 'dsh-memory-runtime'

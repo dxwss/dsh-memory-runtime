@@ -132,6 +132,10 @@ export class MemoryStore {
     return this.traces
   }
 
+  get storagePaths(): ScopePaths {
+    return this.paths
+  }
+
   async list(scope: MemoryScope = 'workspace', topic?: string): Promise<MemoryBlock[]> {
     this.assertInitialized()
     const files = await this.topicFiles(scope)

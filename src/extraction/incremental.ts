@@ -32,6 +32,12 @@ export class IncrementalExtractor {
     return candidates
   }
 
+  async due(turnCount: number, interval: number): Promise<boolean> {
+    await this.load()
+    const normalizedInterval = Number.isInteger(interval) && interval > 0 ? interval : 10
+    return turnCount >= this.lastTurn + normalizedInterval
+  }
+
   async sessionEnd(turns: readonly string[], extractor: CandidateExtractor) {
     return this.scan(turns, extractor, true)
   }

@@ -1,4 +1,4 @@
-# Add this row to a DSH profile with `dsh --patch ./cordis.patch.yml`.
+# Installed as a bundle with `dsh plugin --profile <profile> add dsh-memory-runtime`.
 - insert:
     - id: dsh-memory-runtime
       name: 'dsh-memory-runtime'

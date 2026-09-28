@@ -4,7 +4,7 @@ import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import { SystemPrompt } from '@deepseek-ai/dsh-system-prompt'
-import { ToolRegistry } from '@deepseek-ai/dsh-tools'
+import { ToolRuntime } from '@deepseek-ai/dsh-tools'
 import { ContextEpoch } from '../src/context/epoch.js'
 import { MemoryStore } from '../src/core/store.js'
 import { parseTopicFile } from '../src/core/parser.js'
@@ -142,7 +142,7 @@ describe('DSH integration', () => {
     const ctx = new Context()
     try {
       await ctx.plugin(SystemPrompt)
-      await ctx.plugin(ToolRegistry)
+      await ctx.plugin(ToolRuntime)
       await ctx.plugin(memoryPlugin, { memoryRoot: join(root, 'memory'), workspaceRoot: join(root, 'workspace'), preferGitRoot: false })
       expect(ctx.tools.schemas().map((tool) => tool.name).sort()).toEqual([
         'memory_forget',

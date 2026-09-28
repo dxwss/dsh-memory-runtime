@@ -108,6 +108,12 @@ export interface RuntimeConfig {
   lockTimeoutMs: number
   lockRetryMs: number
   deduplicateReads: boolean
+  extractIntervalTurns: number
+  llmProvider?: string
+  llmModel?: string
+  llmEnabled: boolean
+  extractionEnabled: boolean
+  llmTimeoutMs: number
 }
 
 export const defaultRuntimeConfig: RuntimeConfig = {
@@ -125,6 +131,10 @@ export const defaultRuntimeConfig: RuntimeConfig = {
   lockTimeoutMs: 10_000,
   lockRetryMs: 40,
   deduplicateReads: true,
+  extractIntervalTurns: 10,
+  llmEnabled: true,
+  extractionEnabled: true,
+  llmTimeoutMs: 30_000,
 }
 
 export interface OperationTrace {

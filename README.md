@@ -35,11 +35,19 @@ npm install dsh-memory-runtime
 Then add the bundled plugin to a DSH profile:
 
 ```sh
-dsh --patch ./node_modules/dsh-memory-runtime/cordis.patch.yml
+dsh plugin --profile <profile> add dsh-memory-runtime
 ```
 
-The package metadata also exposes the patch through `dsh.bundle.patch` for
-loaders that read package metadata.
+The DSH plugin manager installs the package into the selected profile and
+automatically applies its `dsh.bundle.patch` metadata. For a local package
+build, use the generated tarball instead:
+
+```sh
+npm pack
+dsh plugin --profile <profile> add ./dsh-memory-runtime-0.1.0.tgz
+```
+
+The current DSH CLI requires Node.js `>=22.19.0` for production use.
 
 For local development:
 
@@ -113,6 +121,13 @@ memory:
   lockTimeoutMs: 10000
   lockRetryMs: 40
   deduplicateReads: true
+  extractIntervalTurns: 10
+  llmEnabled: true
+  extractionEnabled: true
+  llmTimeoutMs: 30000
+  # Optional overrides; otherwise the active DSH agent is used.
+  # llmProvider: deepseek
+  # llmModel: deepseek-chat
 ```
 
 Workspace scope is the default. A candidate can request global scope, but the
@@ -132,8 +147,9 @@ The current relation judge is deterministic and conservative:
 
 The relation judge is injected through `MemoryStore.create({ relationJudge })`,
 so an application can supply an LLM-backed judge while retaining the same
-runtime safety and persistence boundary. The bundled DSH plugin uses the
-deterministic fallback and does not make hidden model calls during writes.
+runtime safety and persistence boundary. In DSH, the plugin uses the active
+agent's configured provider and model when available. LLM failures fall back
+to the deterministic judge; set `llmEnabled: false` to disable model calls.
 
 ## CLI
 
@@ -163,16 +179,15 @@ context de-duplication, incremental extraction, and the Cordis plugin contract.
 
 ## Limitations and Roadmap
 
-The v0.1 runtime deliberately keeps the relation judge local and deterministic;
-LLM extraction hooks and a review UI are extension points, not implicit network
-calls. Incremental extraction is provided as a cursor-based library, while DSH
-session-end hook wiring depends on the host's session API and is not guessed by
-this package. Crash safety is based on fsync plus atomic rename and recoverable
-history; filesystem behavior should still be exercised on the target platform.
+The v0.1 runtime keeps Markdown as the source of truth and treats LLM features
+as optional, bounded helpers. Incremental extraction runs from DSH session
+events when an active agent/model is available, and forced extraction runs at
+session disposal. Crash safety is based on fsync plus atomic rename and
+recoverable history; filesystem behavior should still be exercised on the
+target platform.
 
-Future work can add an optional DSH LLM-backed judge, session lifecycle wiring,
-duplicate suggestions, and a richer maintenance command set without changing
-the Markdown contract.
+Future work can add duplicate suggestions, a review UI, and richer maintenance
+commands without changing the Markdown contract.
 
 ## License
 
